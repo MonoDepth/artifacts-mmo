@@ -1,0 +1,102 @@
+{
+  "apiKey": "your-api-key",
+  "characters": [
+    {
+      "name": "FighterGuy",
+      "actions": [
+        {
+          "name": "Move to attack pos",
+          "if": "$player.position != 3,-2",
+          "cascade": true,
+          "do": [
+            "move 3 -2"
+          ]
+        },
+        {
+          "name": "Rest",
+          "if": "$player.hp < 100",
+          "do": [
+            "rest"
+          ]
+        },
+        {
+          "name": "Attack",
+          "do": [
+            "fight"
+          ]
+        }
+      ],
+      "onFailure": {
+        "ArtifactsInventoryFull": {
+          "do": [
+            "move 4 1",
+            "foreach $item in $player.inventory.items do deposit $item $player.inventory.$item.count"
+          ]
+        }
+      }
+    },
+    {
+      "name": "MinerGuy",
+      "actions": [
+        {
+          "name": "Leave items",
+          "if": "$player.inventory.count > 50",
+          "do": [
+            "move 4 1",
+            "foreach $item in $player.inventory.items do deposit $item $player.inventory.$item.count"
+          ]
+        },
+        {
+          "name": "Move to mining pos",
+          "if": "$player.position != 2,0",
+          "do": [
+            "move 2 0"
+          ]
+        },
+        {
+          "name": "Mine",
+          "do": [
+            "gather"
+          ]
+        }
+      ],
+      "onFailure": {
+        "ArtifactsInventoryFull": {
+          "do": [
+            "move 4 1",
+            "foreach $item in $player.inventory.items do deposit $item $player.inventory.$item.count"
+          ]
+        }
+      }
+    },
+    {
+      "name": "CookerGuy",
+      "actions": [
+        {
+          "name": "Move to fishing pos",
+          "if": "$player.position != 4,2",
+          "cascade": true,
+          "do": [
+            "move 4 2"
+          ]
+        },
+        {
+          "name": "Fish",
+          "do": [
+            "gather"
+          ]
+        }
+      ],
+      "onFailure": {
+        "ArtifactsInventoryFull": {
+          "do": [
+            "move 1 1",
+            "craft cooked_gudgeon $player.inventory.gudgeon.count",
+            "move 4 1",
+            "foreach $item in $player.inventory.items do deposit $item $player.inventory.$item.count"
+          ]
+        }
+      }
+    }
+  ]
+}
